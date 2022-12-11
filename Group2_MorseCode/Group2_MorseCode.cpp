@@ -27,20 +27,18 @@ template<class T>
 void menu() {
 	string msg, encoded_str, decoded_str;
 	BTNode<T>* head = new BTNode<T>(' ');
-	ifstream rfile;
+	ifstream rfile("Morse_Code.txt");
 	string line;
-
+	
 	do {
-		//this needs fixing *****
-		rfile.open("Morse_Code.txt");
-		//while (rfile) {}
-		if (!rfile.is_open()) {
-			cout << "Could not open!" << endl;
+		if(!rfile) {
+			cout << "Error: File not found" << endl;
+			system("pause");
+			return;
 		}
-		if (rfile.is_open()) {
-			while (getline(rfile, line)) {
-				tree_builder(line, head);
-			}
+
+		while(getline(rfile, line)) {
+			tree_builder(line, head);
 		}
 		rfile.close();
 		//*******
