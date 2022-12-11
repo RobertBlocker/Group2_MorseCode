@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -38,7 +39,7 @@ void menu() {
 		}
 		if (rfile.is_open()) {
 			while (getline(rfile, line)) {
-				tree_builder(line, head)
+				tree_builder(line, head);
 			}
 		}
 		rfile.close();
@@ -57,10 +58,8 @@ void menu() {
 					encoded_str.append(" ");
 				}
 				else {
-					encoded_str.append(encode(msg.at(i), "", head));
-					while ((int index = encoded_str.find("1")) != string::npos) {
-						encoded_str.replace(index, 0, "");
-					}
+					encoded_str += encode(msg.at(i), "", head);
+					std::replace(encoded_str.begin(), encoded_str.end(), "1", "");
 				}
 				cout << "Message Encoded into Morse Code: " << encoded_str << endl;
 			}//end for loop
@@ -98,12 +97,12 @@ void mainMenu() {
 template<class T>
 static string encode(char letter, string encoded_str, const BTNode<T>* root) {
 	if (root->val == letter) {
-		return encoded_str + " 1";
+		return encoded_str += " 1";
 	}
 	else {
 		string left_str, right_str;
-		if (root->left != null) {
-			left_str = (root->left->val != ' ') ? encode(letter, encoded_str + ".", root->left) : null;
+		if (root->left != NULL) {
+			left_str = (root->left->val != ' ') ? encode(letter, encoded_str + ".", root->left) : NULL;
 			if (left_str.find("1") != string::npos) {
 				return right_str;
 			}
@@ -142,7 +141,7 @@ BTNode<T>* tree_builder(string line, int pos, const BTNode<T>* root) {
 	if (pos == line.size()) {
 		finished = true;
 
-		if (root == null) {
+		if (root == NULL) {
 			BTNode<T>* new_node = new BTNode<T>(line.at(0));
 			root = new_node;
 		}
@@ -153,7 +152,7 @@ BTNode<T>* tree_builder(string line, int pos, const BTNode<T>* root) {
 
 	if (finished == false) {
 		if(line.at(pos) == '.') {
-			if (root == null) {
+			if (root == NULL) {
 				BTNode<T>* new_node = new BTNode<T>('0');
 				root = new_node;
 				root->left = tree_builder(line, pos, root->left);
@@ -164,7 +163,7 @@ BTNode<T>* tree_builder(string line, int pos, const BTNode<T>* root) {
 		}//end if
 
 		if (line.at(pos) == '-') {
-			if (root == null) {
+			if (root == NULL) {
 				BTNode<T>* new_node = new BTNode<T>('0');
 				root = new_node;
 				root->right = tree_builder(line, pos, root->right);
@@ -180,13 +179,13 @@ BTNode<T>* tree_builder(string line, int pos, const BTNode<T>* root) {
 //Function to print morse code tree to console
 template<class T>
 static void tree_print(const BTNode<T>* root, int space) {
-	if (root == null) { return; }
+	if (root == NULL) { return; }
 
 	space += COUNT;
 
 	tree_print(root->right, space);
 
-	cout >> endl;
+	cout << endl;
 	for (int i = COUNT; i < space; i++) { cout << " "; }
 	cout << root->val << endl;
 
