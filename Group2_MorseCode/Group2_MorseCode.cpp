@@ -9,21 +9,23 @@
 using namespace std;
 
 void menu();
-void mainMenu();
+void main_menu();
 
 char choice;
 static int COUNT = 10;
 
 int main() {
 
+	cout << "MORSE CODE BINARY TREE";
 	menu();
 
 	return 0;
-}
+}//end main
 
 //Menu Display for console
-void mainMenu() {
+void main_menu() {
 
+	cout << endl;
 	cout << "Main Menu" << endl;
 	cout << "e - Encode Message" << endl;
 	cout << "d - Decode Message" << endl;
@@ -31,10 +33,14 @@ void mainMenu() {
 	cout << "Choose Option: ";
 	cin >> choice;
 	cout << endl;
+}//end mainMenu function
 
-}
-
-// Converts lower-case plain-text (with no spaces) to Morse Code form.
+/** Converts lower-case and non-spaced plain-text to Morse Code form.
+	@param letter: singular letter from inputted string
+	@param encoded_str: encoded string
+	@param root: root of binary tree
+	@return: encoded string of morse code
+*/
 string encode(char letter, string encoded_str, const BTNode<char>* root) {
 	if (root->data == letter) {
 		return encoded_str += " 1";
@@ -47,7 +53,7 @@ string encode(char letter, string encoded_str, const BTNode<char>* root) {
 		}
 	}
 
-	if(root->right) {
+	if (root->right) {
 		right_str = (root->right->data != ' ') ? encode(letter, encoded_str + "-", root->right) : NULL;
 		if (right_str.find("1") != string::npos) {
 			return right_str;
@@ -56,12 +62,17 @@ string encode(char letter, string encoded_str, const BTNode<char>* root) {
 	return "";
 }//end encode
 
-//Decode function taking positions of chars (.) and (-)
+/** Takes positions of chars (.) and (-) to decode Morse Code into English text
+	@param to_decode: string of morse code
+	@param pos: position in string
+	@param root: root of binary tree
+	@return: decoded string in text
+*/
 char decode(string to_decode, int pos, const BTNode<char>* root) {
 	if (pos == to_decode.size()) {
 		return root->data;
 	}
-	
+
 	if (to_decode.at(pos) == '.') {
 		pos += 1;
 		return decode(to_decode, pos, root->left);
@@ -73,7 +84,10 @@ char decode(string to_decode, int pos, const BTNode<char>* root) {
 	return ' ';
 }//end decode
 
-//Function to print morse code tree to console
+/** Builds a visualizer of the binary tree of morse code.
+	@param root: root of binary tree
+	@param space: spacing for tree nodees
+*/
 void tree_print(const BTNode<char>* root, int space) {
 	if (!root) { return; }
 
@@ -99,22 +113,22 @@ void menu() {
 	BTNode<char>* head = new BTNode<char>(' ');
 	ifstream rfile("Morse_Code.txt");
 	string line;
-
-	if(!rfile) {
+	
+	if (!rfile) {
 		cout << "Error: File not found" << endl;
 		system("pause");
 		return;
 	}
 
-	while(getline(rfile, line)) {
+	while (getline(rfile, line)) {
 		head->tree_builder(line, head);
 	}
 	rfile.close();
-	//*******
-	//tree_printer(head);
-	
+	//prints visualizer for morse code binary tree
+	tree_printer(head);
+
 	do {
-		mainMenu();
+		main_menu();
 
 		size_t pos;
 		string morse;
@@ -136,26 +150,24 @@ void menu() {
 			}//end for loop
 
 			cout << "Message Encoded into Morse Code: " << encoded_str << endl;
+			encoded_str = "";
 			break;
-			
+
 
 		case 'd':
 			cout << "Enter message to decode: " << endl;
 			cin.ignore();
 			getline(cin, msg, '\n');
-				
+
 			while ((pos = msg.find(' ')) != string::npos) {
 				morse = msg.substr(0, pos);
 				decoded_str += decode(morse, 0, head);
 				msg.erase(0, pos + 1);
 			}
 			decoded_str += decode(msg, 0, head);
-				
-				/*for (int i = 0; i < msg.size(); i++) {
-					decoded_str += decode(msg, 0, head);
-				}*/	
 
 			cout << "Morse Code Message Decoded: " << decoded_str << endl;
+			decoded_str = "";
 			break;
 
 		case 'q':
