@@ -42,7 +42,12 @@ BTNode<T>* BTNode<T>::tree_builder(string line, BTNode<T>* root) {
     return tree_builder(line, 0, root);
 }//end wrapper
 
-//Function to build tree of morse code 
+/** Builds a binary tree of morse code.
+    @param line: string of char with corresponding morse code
+    @param pos: position in string 
+    @param root: root of binary tree
+    @return: data in root.
+*/
 template<class T>
 BTNode<T>* BTNode<T>::tree_builder(string line, int pos, BTNode<T>* root) {
     pos++;
@@ -61,7 +66,7 @@ BTNode<T>* BTNode<T>::tree_builder(string line, int pos, BTNode<T>* root) {
     }
 
     if (finished == false) {
-        if(line.at(pos) == '.') {
+        if (line.at(pos) == '.') {
             if (root == NULL) {
                 BTNode<T>* new_node = new BTNode<T>('0');
                 root = new_node;
