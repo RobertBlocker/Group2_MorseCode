@@ -51,15 +51,19 @@ string encode(char letter, string encoded_str, const BTNode<char>* root) {
 
 //Decode function taking positions of chars (.) and (-)
 char decode(string to_decode, int pos, const BTNode<char>* root) {
+	if (pos == to_decode.size()) {
+		return root->data;
+	}
+	
 	if (to_decode.at(pos) == '.') {
 		pos += 1;
 		return decode(to_decode, pos, root->left);
 	}
-	else if (to_decode.at(pos) == '-') {
+	if (to_decode.at(pos) == '-') {
 		pos += 1;
 		return decode(to_decode, pos, root->right);
 	}
-	return root->data;
+	return ' ';
 }//end decode
 
 //Function to print morse code tree to console
@@ -88,22 +92,25 @@ void menu() {
 	BTNode<char>* head = new BTNode<char>(' ');
 	ifstream rfile("Morse_Code.txt");
 	string line;
+
+	if(!rfile) {
+		cout << "Error: File not found" << endl;
+		system("pause");
+		return;
+	}
+
+	while(getline(rfile, line)) {
+		head->tree_builder(line, head);
+	}
+	rfile.close();
+	//*******
+	//tree_printer(head);
 	
 	do {
-		if(!rfile) {
-			cout << "Error: File not found" << endl;
-			system("pause");
-			return;
-		}
-
-		while(getline(rfile, line)) {
-			head->tree_builder(line, head);
-		}
-		rfile.close();
-		//*******
-		tree_printer(head);
-
 		mainMenu();
+
+		size_t pos;
+		string morse;
 
 		switch (choice) {
 
@@ -125,11 +132,22 @@ void menu() {
 
 		case 'd':
 			cout << "Enter message to decode: " << endl;
-			cin >> msg;
-			for (int i = 0; i < msg.size(); i++) {
-				decoded_str += decode(msg, 0, head);
+			cin.ignore();
+			getline(cin, msg, '\n');
+				
+			while ((pos = msg.find(' ')) != string::npos) {
+				morse = msg.substr(0, pos);
+				decoded_str += decode(morse, 0, head);
+				msg.erase(0, pos + 1);
 			}
+			decoded_str += decode(msg, 0, head);
+				
+				/*for (int i = 0; i < msg.size(); i++) {
+					decoded_str += decode(msg, 0, head);
+				}*/	
+
 			cout << "Morse Code Message Decoded: " << decoded_str << endl;
+			break;
 
 		case 'q':
 			break;
