@@ -23,8 +23,8 @@ struct BTNode {
     virtual ~BTNode();  // Avoid warning messages.
 
     // Class-member function
-    void tree_builder(string, const BTNode<T>*);
-    void tree_builder(string, int, const BTNode<T>*);
+    BTNode<T>* tree_builder(string, BTNode<T>*);
+    BTNode<T>* tree_builder(string, int, BTNode<T>*);
     virtual string to_string() const;  // Returns a string containing the data stored in the node.
 };
 
@@ -38,13 +38,13 @@ BTNode<T>::~BTNode() {}
 
 //Wrapper function
 template<class T>
-void BTNode<T>::tree_builder(string line, const BTNode<T>* root) {
-    tree_builder(line, 0, root);
+BTNode<T>* BTNode<T>::tree_builder(string line, BTNode<T>* root) {
+    return tree_builder(line, 0, root);
 }//end wrapper
 
 //Function to build tree of morse code 
 template<class T>
-void BTNode<T>::tree_builder(string line, int pos, const BTNode<T>* root) {
+BTNode<T>* BTNode<T>::tree_builder(string line, int pos, BTNode<T>* root) {
     pos++;
     bool finished = false;
 
@@ -83,6 +83,7 @@ void BTNode<T>::tree_builder(string line, int pos, const BTNode<T>* root) {
             }
         }//end if
     }
+    return root;
 }//end tree_builder
 
 /** Returns a string containing the data stored in the node.
