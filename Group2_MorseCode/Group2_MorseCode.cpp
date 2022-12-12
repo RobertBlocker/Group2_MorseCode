@@ -43,6 +43,13 @@ string encode(char letter, string encoded_str, const BTNode<char>* root) {
 	if (root->left) {
 		left_str = (root->left->data != ' ') ? encode(letter, encoded_str + ".", root->left) : NULL;
 		if (left_str.find("1") != string::npos) {
+			return left_str;
+		}
+	}
+
+	if(root->right) {
+		right_str = (root->right->data != ' ') ? encode(letter, encoded_str + "-", root->right) : NULL;
+		if (right_str.find("1") != string::npos) {
 			return right_str;
 		}
 	}
@@ -126,8 +133,10 @@ void menu() {
 					//replace(encoded_str.begin(), encoded_str.end(), '1', '');
 					encoded_str.erase(remove(encoded_str.begin(), encoded_str.end(), '1'), encoded_str.end());
 				}
-				cout << "Message Encoded into Morse Code: " << encoded_str << endl;
 			}//end for loop
+
+			cout << "Message Encoded into Morse Code: " << encoded_str << endl;
+			break;
 			
 
 		case 'd':
